@@ -2,23 +2,42 @@
   "name": "@trustshyft/shared",
   "version": "0.1.0",
   "private": true,
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
   "exports": {
-    ".": "./src/index.ts",
-    "./types": "./src/types/index.ts",
-    "./schemas": "./src/schemas/index.ts",
-    "./constants": "./src/constants/index.ts"
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./types": {
+      "import": "./dist/esm/types/index.js",
+      "require": "./dist/cjs/types/index.js",
+      "types": "./dist/types/types/index.d.ts"
+    },
+    "./schemas": {
+      "import": "./dist/esm/schemas/index.js",
+      "require": "./dist/cjs/schemas/index.js",
+      "types": "./dist/types/schemas/index.d.ts"
+    },
+    "./constants": {
+      "import": "./dist/esm/constants/index.js",
+      "require": "./dist/cjs/constants/index.js",
+      "types": "./dist/types/constants/index.d.ts"
+    }
   },
   "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
     "typecheck": "tsc --noEmit",
-    "build": "tsc --noEmit",
     "clean": "rm -rf dist"
   },
   "dependencies": {
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "tsup": "^8.1.0",
     "typescript": "^5.4.5"
   }
 }
