@@ -1,0 +1,19 @@
+# TrustShyft Web - Phase 1
+FROM node:20-alpine AS base
+RUN corepack enable && corepack prepare pnpm@9.0.0 --activate
+WORKDIR /repo
+
+FROM base AS deps
+COPY pnpm-workspace.yaml package.json ./
+COPY apps/web/package.json apps/web/package.json
+COPY packages/shared/package.json packages/shared/package.json
+RUN pnpm install --frozen-lockfile=false
+
+FROM deps AS build
+COPY . .
+RUN pnpm --filter @trustshyft/web... build
+
+FROM nginx:1.27-alpine AS run
+COPY --from=build /repo/apps/web/dist /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

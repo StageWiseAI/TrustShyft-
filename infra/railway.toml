@@ -1,0 +1,26 @@
+# TrustShyft Phase 1 - Railway deployment manifest.
+#
+# Two services per environment: trustshyft-api and trustshyft-web. PostgreSQL
+# is provisioned as a Railway-managed plugin and exposed to the api service
+# via DATABASE_URL. CLERK_* and WEB_ORIGIN must be set per environment.
+
+[build]
+builder = "DOCKERFILE"
+
+[[services]]
+name = "trustshyft-api"
+source = "."
+[services.build]
+dockerfilePath = "infra/Dockerfile.api"
+[services.deploy]
+startCommand = "node dist/server.js"
+healthcheckPath = "/health"
+restartPolicyType = "ON_FAILURE"
+
+[[services]]
+name = "trustshyft-web"
+source = "."
+[services.build]
+dockerfilePath = "infra/Dockerfile.web"
+[services.deploy]
+restartPolicyType = "ON_FAILURE"

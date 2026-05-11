@@ -1,0 +1,22 @@
+{
+  "name": "trustshyft",
+  "private": true,
+  "version": "0.1.0",
+  "description": "TrustShyft - Behavioural Governance Operating System for AI-assisted work (Phase 1)",
+  "packageManager": "pnpm@9.0.0",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "typecheck": "turbo run typecheck",
+    "lint": "turbo run lint",
+    "clean": "turbo run clean && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0",
+    "typescript": "^5.4.5"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  }
+}
