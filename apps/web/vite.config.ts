@@ -9,9 +9,10 @@ export default defineConfig({
       "@": path.resolve(__dirname, "src/app"),
     },
   },
-  server: {
-    port: 5173,
-    host: true,
+ server: {
+  host: '0.0.0.0',
+  port: 5173,
+  allowedHosts: ['trustshyftweb-production.up.railway.app']
   },
   build: {
     outDir: "dist",
