@@ -4,14 +4,16 @@ RUN corepack enable && corepack prepare pnpm@9.0.0 --activate
 WORKDIR /repo
 
 FROM base AS deps
-COPY pnpm-workspace.yaml package.json ./
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
 COPY apps/api/package.json apps/api/package.json
 COPY packages/shared/package.json packages/shared/package.json
 RUN pnpm install --frozen-lockfile=false
 
 FROM deps AS build
 COPY . .
-RUN pnpm --filter @trustshyft/api... build
+# Build shared first so its dist/ exists before the api tsc run
+RUN pnpm --filter @trustshyft/shared build
+RUN pnpm --filter @trustshyft/api build
 
 FROM node:20-alpine AS run
 WORKDIR /app
@@ -19,5 +21,8 @@ ENV NODE_ENV=production
 COPY --from=build /repo/apps/api/dist ./dist
 COPY --from=build /repo/apps/api/package.json ./package.json
 COPY --from=build /repo/apps/api/node_modules ./node_modules
+# Copy compiled shared so the workspace: import resolves at runtime
+COPY --from=build /repo/packages/shared/dist ./node_modules/@trustshyft/shared/dist
+COPY --from=build /repo/packages/shared/package.json ./node_modules/@trustshyft/shared/package.json
 EXPOSE 4000
 CMD ["node", "dist/server.js"]
